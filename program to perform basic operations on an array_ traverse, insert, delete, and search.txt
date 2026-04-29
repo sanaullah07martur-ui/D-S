@@ -1,0 +1,88 @@
+//program to perform basic operations on an array: traverse, insert, delete, and search
+#include <stdio.h>
+
+int main() {
+    int arr[100], n, i, pos, value, choice, found;
+
+    printf("Enter the number of elements in the array: ");
+    scanf("%d", &n);
+
+    printf("Enter the elements of the array: ");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    do {
+        printf("\n--- Menu ---\n");
+        printf("1. Traverse\n2. Insert\n3. Delete\n4. Search\n5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        // The Switch must be INSIDE the loop to respond to choices
+        switch (choice) {
+            case 1://traverse
+                printf("Elements in the array: ");
+                for (i = 0; i < n; i++) {
+                    printf("%d ", arr[i]);
+                }
+                printf("\n");
+                break;
+
+            case 2://insert
+                printf("Enter the position (1 to %d) to insert: ", n + 1);
+                scanf("%d", &pos);
+                if (pos > n + 1 || pos <= 0 || n >= 100) {
+                    printf("Invalid position or Array Full!\n");
+                } else {
+                    printf("Enter the value to insert: ");
+                    scanf("%d", &value);
+                    for (i = n - 1; i >= pos - 1; i--) {
+                        arr[i + 1] = arr[i];
+                    }
+                    arr[pos - 1] = value;
+                    n++;
+                    printf("Element inserted successfully!\n");
+                }
+                break;
+
+            case 3://delete
+                printf("Enter the position to delete: ");
+                scanf("%d", &pos);
+                if (pos > n || pos <= 0) {
+                    printf("Invalid position!\n");
+                } else {
+                    for (i = pos - 1; i < n - 1; i++) {
+                        arr[i] = arr[i + 1];
+                    }
+                    n--;
+                    printf("Element deleted successfully!\n");
+                }
+                break;
+
+            case 4://search
+                printf("Enter the value to search: ");
+                scanf("%d", &value);
+                found = 0;
+                for (i = 0; i < n; i++) {
+                    if (arr[i] == value) {
+                        printf("Element found at position %d\n", i + 1);
+                        found = 1;
+                        break;
+                    }
+                }
+                if (!found) {
+                    printf("Element not found in the array!\n");
+                }
+                break;
+
+            case 5://exit
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    } while (choice != 5);
+
+    return 0;
+}

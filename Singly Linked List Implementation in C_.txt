@@ -1,0 +1,179 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node {
+    int data;
+    struct node* next;
+};
+
+// Create node
+struct node* createnode(int data)
+{
+    struct node* newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = data;
+    newnode->next = NULL;
+    return newnode;
+}
+
+// Insert at beginning
+void insertatbeginning(struct node** head, int data)
+{
+    struct node* newnode = createnode(data);
+    newnode->next = *head;
+    *head = newnode;
+}
+
+// Insert at end
+void insertatend(struct node** head, int data)
+{
+    struct node* newnode = createnode(data);
+
+    if (*head == NULL) {
+        *head = newnode;
+        return;
+    }
+
+    struct node* temp = *head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = newnode;
+}
+
+// Insert at position
+void insertatposition(struct node** head, int data, int position)
+{
+    struct node* newnode = createnode(data);
+
+    if (position == 1) {
+        newnode->next = *head;
+        *head = newnode;
+        return;
+    }
+
+    struct node* temp = *head;
+
+    for (int i = 1; i < position - 1; i++) {
+        if (temp == NULL) {
+            printf("Position out of bounds\n");
+            return;
+        }
+        temp = temp->next;
+    }
+
+    newnode->next = temp->next;
+    temp->next = newnode;
+}
+
+// Delete from beginning
+void deletefrombeginning(struct node** head)
+{
+    if (*head == NULL) return;
+
+    struct node* temp = *head;
+    *head = (*head)->next;
+    free(temp);
+}
+
+// Delete from end
+void deletefromend(struct node** head)
+{
+    if (*head == NULL) return;
+
+    if ((*head)->next == NULL) {
+        free(*head);
+        *head = NULL;
+        return;
+    }
+
+    struct node* temp = *head;
+
+    while (temp->next->next != NULL) {
+        temp = temp->next;
+    }
+
+    free(temp->next);
+    temp->next = NULL;
+}
+
+// Delete from position
+void deletefromposition(struct node** head, int position)
+{
+    if (*head == NULL) return;
+
+    struct node* temp = *head;
+
+    if (position == 1) {
+        *head = (*head)->next;
+        free(temp);
+        return;
+    }
+
+    for (int i = 1; temp != NULL && i < position - 1; i++) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL || temp->next == NULL) {
+        printf("Position out of bounds\n");
+        return;
+    }
+
+    struct node* next = temp->next->next;
+    free(temp->next);
+    temp->next = next;
+}
+
+// Traverse list
+void traverse(struct node* head)
+{
+    struct node* temp = head;
+
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Search element
+int search(struct node* head, int key)
+{
+    struct node* temp = head;
+
+    while (temp != NULL) {
+        if (temp->data == key)
+            return 1;
+        temp = temp->next;
+    }
+    return 0;
+}
+
+// Main function
+int main()
+{
+    struct node* head = NULL;
+
+    insertatend(&head, 10);
+    insertatend(&head, 20);
+    insertatend(&head, 30);
+    insertatbeginning(&head, 5);
+    insertatposition(&head, 25, 3);
+
+    printf("List after insertion:\n");
+    traverse(head);
+
+    deletefrombeginning(&head);
+    deletefromend(&head);
+    deletefromposition(&head, 2);
+
+    printf("List after deletion:\n");
+    traverse(head);
+
+    
+        printf("list contains 20 %s\n", search(head,20)?"yes":"no");
+    
+        
+        printf("list contains 40 %s\n", search(head,40)?"yes":"no");
+
+    return 0;
+}
